@@ -1,7 +1,10 @@
 package com.squarecross.photoalbum.service;
 
 import com.squarecross.photoalbum.domain.Album;
+import com.squarecross.photoalbum.dto.AlbumDto;
+import com.squarecross.photoalbum.mapper.AlbumMapper;
 import com.squarecross.photoalbum.repository.AlbumRepository;
+import com.squarecross.photoalbum.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +16,15 @@ public class AlbumService {
     @Autowired
     private AlbumRepository albumRepository;
 
-    public Album getAlbumFindById(Long albumId){
+    @Autowired
+    private PhotoRepository photoRepository;
+
+    public AlbumDto getAlbumFindById(Long albumId){
         Optional<Album> res = albumRepository.findById(albumId);
         if(res.isPresent()){
-            return res.get();
+            AlbumDto albumDto = AlbumMapper.convertToDto(res.get());
+            albumDto.setCount(photoRepository.countByAlbum_AlbumId(albumId));
+            return albumDto;
         }
         else{
             throw new EntityNotFoundException(String.format("앨범 아이디 %d로 조회되지 않음", albumId));
@@ -24,10 +32,12 @@ public class AlbumService {
 
     }
 
-    public Album getAlbumFindByName(String albumName){
+    public AlbumDto getAlbumFindByName(String albumName){
         Optional<Album> res = albumRepository.findByAlbumName(albumName);
         if(res.isPresent()){
-            return res.get();
+            AlbumDto albumDto = AlbumMapper.convertToDto(res.get());
+            albumDto.setCount(photoRepository.countByAlbum_AlbumId(albumId)); //미완
+            return albumDto;
         }
         else{
             throw new EntityNotFoundException(String.format("앨범 이름 %s로 조회되지 않음", albumName));
