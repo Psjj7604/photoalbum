@@ -36,7 +36,7 @@ public class AlbumService {
         Optional<Album> res = albumRepository.findByAlbumName(albumName);
         if(res.isPresent()){
             AlbumDto albumDto = AlbumMapper.convertToDto(res.get());
-            albumDto.setCount(photoRepository.countByAlbum_AlbumId(albumId)); //미완
+            albumDto.setCount(photoRepository.countByAlbum_AlbumName(albumName)); //미완
             return albumDto;
         }
         else{
