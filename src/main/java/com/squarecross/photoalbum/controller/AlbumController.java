@@ -5,10 +5,7 @@ import com.squarecross.photoalbum.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/albums")
@@ -23,4 +20,15 @@ public class AlbumController {
         return new ResponseEntity<>(album, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    public ResponseEntity<AlbumDto> getAlbumByQuery(@RequestParam(value = "albumId") final long albumId) {
+        AlbumDto album = albumService.getAlbumFindById(albumId);
+        return new ResponseEntity<>(album, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/json_body", method = RequestMethod.POST)
+    public AlbumDto getAlbumByJson(@RequestBody final AlbumDto albumDto) {
+        return albumDto;
+    }
 }
