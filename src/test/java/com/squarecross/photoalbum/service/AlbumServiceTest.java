@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -78,10 +82,26 @@ class AlbumServiceTest {
 
     }
 
+
     @Test
-    void testAlbumCreate(){
-
-
+    void testAlbumCreate() throws Exception {
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("createdAlbum");
+        int total = albumRepository.findAll().size();
+        AlbumDto savedAlbumDto = albumService.createAlbum(albumDto);
+        assertEquals(total+1, albumRepository.findAll().size());
     }
 
+    @Test
+    void testAlbumDelete() throws Exception{
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("createdAlbum");
+        AlbumDto savedAlbumDto = albumService.createAlbum(albumDto);
+
+        Files.delete(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbumDto.getAlbumId()));
+        Files.delete(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbumDto.getAlbumId()));
+
+        assertEquals(false, Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbumDto.getAlbumId())));
+        assertEquals(false, Files.exists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbumDto.getAlbumId())));
+    }
 }
