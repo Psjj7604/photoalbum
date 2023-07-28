@@ -47,12 +47,12 @@ class AlbumServiceTest {
             albumService.getAlbumFindByName("이름조회 테스트");
         } );*/
 
-        assertThrows(EntityNotFoundException.class, () -> {
+        /*assertThrows(EntityNotFoundException.class, () -> {
             albumService.getAlbumFindByName("다른 이름");
-        } );
+        } );*/
 
-        //Album resAlbum = albumService.getAlbumFindByName(savedAlbum.getAlbumName());
-        //assertEquals("이름조회 테스트", resAlbum.getAlbumName());
+        AlbumDto resAlbum = albumService.getAlbumFindByName(savedAlbum.getAlbumName());
+        assertEquals("이름조회 테스트", resAlbum.getAlbumName());
 
     }
 
@@ -75,6 +75,12 @@ class AlbumServiceTest {
 
         AlbumDto resAlbum = albumService.getAlbumFindById(savedAlbum.getAlbumId());
         assertEquals(2, resAlbum.getCount());
+
+    }
+
+    @Test
+    void testAlbumCreate(){
+
 
     }
 
