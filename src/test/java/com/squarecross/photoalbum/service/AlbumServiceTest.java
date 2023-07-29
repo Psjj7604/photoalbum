@@ -145,4 +145,16 @@ class AlbumServiceTest {
         AlbumDto updatedDto = albumService.getAlbumFindById(albumId);
         assertEquals("변경 후", updatedDto.getAlbumName());
     }
+
+    @Test
+    void deleteAlbum() throws Exception{
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setAlbumName("제거될 앨범");
+
+        AlbumDto createdDto = albumService.createAlbum(albumDto);
+        int total = albumRepository.findAll().size();
+
+        albumService.deleteAlbum(createdDto.getAlbumId());
+        assertEquals(total-1, albumRepository.findAll().size());
+    }
 }
