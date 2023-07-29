@@ -64,6 +64,11 @@ public class AlbumService {
         Files.createDirectories(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + album.getAlbumId()));
     }
 
+    private void deleteAlbumDirectories(Album album) throws IOException{
+        Files.delete(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + album.getAlbumId()));
+        Files.delete(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + album.getAlbumId()));
+    }
+
     public List<AlbumDto> getAlbumList(String keyword, String sort, String orderBy){
         List<Album> albums;
         if (!Objects.equals(orderBy, "asc") && !Objects.equals(orderBy, "desc")) {
@@ -107,5 +112,15 @@ public class AlbumService {
         updateAlbum.setAlbumName(albumDto.getAlbumName());
         Album savedAlbum = this.albumRepository.save(updateAlbum);
         return AlbumMapper.convertToDto(savedAlbum);
+    }
+
+    public void deleteAlbum(Long AlbumId) throws IOException {
+        Optional<Album> album = this.albumRepository.findById(AlbumId);
+        if(album.isEmpty()){
+            throw new NoSuchElementException(String.format("Album ID : '%d'가 존재하지 않흡니다", AlbumId));
+        }
+        Album deleteAlbum = album.get();
+        albumRepository.deleteById(deleteAlbum.getAlbumId());
+        deleteAlbumDirectories(deleteAlbum);
     }
 }
