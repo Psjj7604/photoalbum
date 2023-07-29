@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/albums")
@@ -32,7 +33,7 @@ public class AlbumController {
     @RequestMapping(value = "/json_body", method = RequestMethod.POST)
     public ResponseEntity<AlbumDto> getAlbumByJson(@RequestBody final AlbumDto albumDto) {
         AlbumDto album = albumService.getAlbumFindById(albumDto.getAlbumId());
-        return new ResponseEntity<>(album,HttpStatus.OK);
+        return new ResponseEntity<>(album, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -40,4 +41,13 @@ public class AlbumController {
         AlbumDto savedAlbumDto = albumService.createAlbum(albumDto);
         return new ResponseEntity<>(savedAlbumDto, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<AlbumDto>> getAlbumList(@RequestParam(value = "keyword", required = false, defaultValue = "") final String keyword,
+                                                       @RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort,
+                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "desc") final String orderBy) {
+        List<AlbumDto> albumDtos = albumService.getAlbumList(keyword, sort, orderBy);
+        return new ResponseEntity<>(albumDtos, HttpStatus.OK);
+    }
+
 }

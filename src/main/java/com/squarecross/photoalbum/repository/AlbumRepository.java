@@ -10,4 +10,9 @@ import java.util.Optional;
 @Repository
 public interface AlbumRepository extends JpaRepository<Album, Long> {
         Optional<Album> findByAlbumName(String name);
+        List<Album> findByAlbumNameContainingOrderByCreatedAtDesc(String keyword);
+        List<Album> findByAlbumNameContainingOrderByCreatedAtAsc(String keyword);
+        List<Album> findByAlbumNameContainingOrderByAlbumNameAsc(String keyword);
+        List<Album> findByAlbumNameContainingOrderByAlbumNameDesc(String keyword);
+
 }
