@@ -3,6 +3,9 @@ package com.squarecross.photoalbum.mapper;
 import com.squarecross.photoalbum.domain.Album;
 import com.squarecross.photoalbum.dto.AlbumDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class AlbumMapper {
     public static AlbumDto convertToDto(Album album) {
         AlbumDto albumDto = new AlbumDto();
@@ -19,4 +22,11 @@ public class AlbumMapper {
         album.setCreatedAt(albumDto.getCreatedAt());
         return album;
     }
+
+
+    public static List<AlbumDto> converToDtoList(List<Album> albums) {
+        return albums.stream().map(AlbumMapper::convertToDto).collect(Collectors.toList());
+        //albums에 있는 각 앨범을 AlbumMapper.converToDto로 변화시킨 이후 리스트로 다시 collect
+    }
+
 }
