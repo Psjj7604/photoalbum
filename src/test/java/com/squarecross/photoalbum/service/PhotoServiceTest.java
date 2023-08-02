@@ -29,6 +29,10 @@ class PhotoServiceTest {
     PhotoService photoService;
 
 
+    /**
+     * 기존 테스트는 albumId의 값과 관계없이 photoId값만으로도 조회가 가능했음,
+     * 별개로 처리 필요.
+     */
     @Test
     void getPhotoFindById() throws Exception {
         Photo photo = new Photo();

@@ -38,8 +38,8 @@ public class PhotoService {
     private final String original_path = Constants.PATH_PREFIX + "/photos/original";
     private final String thumb_path = Constants.PATH_PREFIX + "/photos/thumb";
 
-    public PhotoDto getPhotoFindById(Long photoId){
-        Optional<Photo> res = photoRepository.findById(photoId);
+    public PhotoDto getPhotoFindById(Long albumId, Long photoId){
+        Optional<Photo> res = photoRepository.findByAlbum_AlbumIdAndPhotoId(albumId, photoId);
         if(res.isPresent()){
             PhotoDto photoDto = PhotoMapper.convertToDto(res.get());
             return photoDto;
@@ -108,7 +108,7 @@ public class PhotoService {
         return new File(Constants.PATH_PREFIX + res.get().getOriginalUrl());
     }
 
-    public List<PhotoDto> getPhotoList(String keyword, String sort, String orderBy){
+    public List<PhotoDto> getPhotoList(Long albumId, String keyword, String sort, String orderBy){
         List<Photo> photos;
         if (!Objects.equals(orderBy, "asc") && !Objects.equals(orderBy, "desc")) {
             throw new IllegalArgumentException("올바른 정렬 순서를 지정해주세요. (asc 또는 desc)");
@@ -116,18 +116,18 @@ public class PhotoService {
 
         if (Objects.equals(sort, "byName")) {
             if(Objects.equals(orderBy, "asc")){
-                photos = photoRepository.findByFileNameContainingOrderByFileNameAsc(keyword);
+                photos = photoRepository.findByAlbum_AlbumIdAndFileNameContainingOrderByFileNameAsc(albumId, keyword);
             }
             else {
-                photos = photoRepository.findByFileNameContainingOrderByFileNameDesc(keyword);
+                photos = photoRepository.findByAlbum_AlbumIdAndFileNameContainingOrderByFileNameDesc(albumId, keyword);
             }
 
         } else if (Objects.equals(sort, "byDate")) {
             if (Objects.equals(orderBy,"asc")){
-                photos = photoRepository.findByFileNameContainingOrderByUploadedAtAsc(keyword);
+                photos = photoRepository.findByAlbum_AlbumIdAndFileNameContainingOrderByUploadedAtAsc(albumId, keyword);
             }
             else {
-                photos = photoRepository.findByFileNameContainingOrderByUploadedAtDesc(keyword);
+                photos = photoRepository.findByAlbum_AlbumIdAndFileNameContainingOrderByUploadedAtDesc(albumId, keyword);
             }
         } else {
             throw new IllegalStateException("알 수 없는 정렬 기준입니다.");

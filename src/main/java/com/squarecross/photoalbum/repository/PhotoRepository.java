@@ -15,10 +15,12 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Optional<Photo> findByFileNameAndAlbum_AlbumId(String photoName, Long albumId);
 
-    List<Photo> findByFileNameContainingOrderByUploadedAtDesc(String keyword);
-    List<Photo> findByFileNameContainingOrderByUploadedAtAsc(String keyword);
-    List<Photo> findByFileNameContainingOrderByFileNameAsc(String keyword);
-    List<Photo> findByFileNameContainingOrderByFileNameDesc(String keyword);
+    Optional<Photo> findByAlbum_AlbumIdAndPhotoId(Long albumId, Long photoId);
+
+    List<Photo> findByAlbum_AlbumIdAndFileNameContainingOrderByUploadedAtDesc(Long albumId, String keyword);
+    List<Photo> findByAlbum_AlbumIdAndFileNameContainingOrderByUploadedAtAsc(Long albumId, String keyword);
+    List<Photo> findByAlbum_AlbumIdAndFileNameContainingOrderByFileNameAsc(Long albumId, String keyword);
+    List<Photo> findByAlbum_AlbumIdAndFileNameContainingOrderByFileNameDesc(Long albumId, String keyword);
 
 
 

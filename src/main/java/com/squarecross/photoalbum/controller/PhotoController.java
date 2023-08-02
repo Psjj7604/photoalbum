@@ -35,7 +35,7 @@ public class PhotoController {
     @RequestMapping(value = "/{photoId}", method = RequestMethod.GET)
     public ResponseEntity<PhotoDto> getPhotoInfo(@PathVariable("albumId") final Long albumId,
                                                  @PathVariable("photoId") final Long photoId) {
-        PhotoDto photo = photoService.getPhotoFindById(photoId);
+        PhotoDto photo = photoService.getPhotoFindById(albumId, photoId);
         return new ResponseEntity<>(photo, HttpStatus.OK);
     }
 
@@ -84,8 +84,9 @@ public class PhotoController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<PhotoDto>> getPhotoList(@RequestParam(value = "keyword", required = false, defaultValue = "") final String keyword,
                                                        @RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort,
-                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "desc") final String orderBy) {
-        List<PhotoDto> photoDtos = photoService.getPhotoList(keyword, sort, orderBy);
+                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "desc") final String orderBy,
+                                                       @PathVariable("albumId") final Long albumId) {
+        List<PhotoDto> photoDtos = photoService.getPhotoList(albumId, keyword, sort, orderBy);
         return new ResponseEntity<>(photoDtos, HttpStatus.OK);
     }
 }
