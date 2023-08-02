@@ -33,7 +33,7 @@ class PhotoServiceTest {
      * 기존 테스트는 albumId의 값과 관계없이 photoId값만으로도 조회가 가능했음,
      * 별개로 처리 필요.
      */
-    @Test
+    /*@Test
     void getPhotoFindById() throws Exception {
         Photo photo = new Photo();
         photo.setFileName("테스트1");
@@ -42,7 +42,7 @@ class PhotoServiceTest {
         PhotoDto resPhoto = photoService.getPhotoFindById(savedPhoto.getPhotoId());
         assertEquals("테스트1", resPhoto.getFileName());
 
-    }
+    }*/
 
     @Test
     void 사진정보상세조회() throws Exception{
