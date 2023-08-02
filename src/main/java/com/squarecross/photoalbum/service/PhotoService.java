@@ -4,6 +4,7 @@ import com.squarecross.photoalbum.domain.Album;
 import com.squarecross.photoalbum.domain.Photo;
 import com.squarecross.photoalbum.dto.AlbumDto;
 import com.squarecross.photoalbum.dto.PhotoDto;
+import com.squarecross.photoalbum.dto.PhotoMoveDto;
 import com.squarecross.photoalbum.mapper.AlbumMapper;
 import com.squarecross.photoalbum.mapper.PhotoMapper;
 import com.squarecross.photoalbum.repository.AlbumRepository;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -137,10 +139,24 @@ public class PhotoService {
         return photoDtos;
     }
 
+    public void movePhotos(Long fromAlbumId, Long toAlbumId, List<Long> photoIds) {
+        Album toAlbum = albumRepository.findById(toAlbumId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Album ID : '%d'가 존재하지 않습니다.", toAlbumId)));
 
+        for (Long photoId : photoIds) {
+            Optional<Photo> photo = this.photoRepository.findById(photoId);
+            if (photo.isEmpty()) {
+                throw new NoSuchElementException(String.format("Photo ID : '%d'가 존재하지 않습니다.", photoId));
+            }
+            Photo updatePhoto = photo.get();
+            updatePhoto.setAlbum(toAlbum);
+            photoRepository.save(updatePhoto);
+            /*
+            파일 디렉터리 수정 코드 필요
+             */
 
-
-
+        }
+    }
 
 }
 

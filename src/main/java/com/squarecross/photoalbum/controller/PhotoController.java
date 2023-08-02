@@ -3,6 +3,7 @@ package com.squarecross.photoalbum.controller;
 import com.squarecross.photoalbum.domain.Photo;
 import com.squarecross.photoalbum.dto.AlbumDto;
 import com.squarecross.photoalbum.dto.PhotoDto;
+import com.squarecross.photoalbum.dto.PhotoMoveDto;
 import com.squarecross.photoalbum.service.AlbumService;
 import com.squarecross.photoalbum.service.PhotoService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -28,10 +29,6 @@ public class PhotoController {
     @Autowired
     private PhotoService photoService;
 
-    /**
-     * @param albumId 입력된 앨범 아이디에 대해서 처리하지 않아서 사진 아이디만 가지고도 조회가 가능함.
-     *                따라서 @RequestMapping("/albums/{albumId}/photos/{photoId}")에서 {albumId}값이 현재 무의미함.
-     */
     @RequestMapping(value = "/{photoId}", method = RequestMethod.GET)
     public ResponseEntity<PhotoDto> getPhotoInfo(@PathVariable("albumId") final Long albumId,
                                                  @PathVariable("photoId") final Long photoId) {
@@ -88,5 +85,21 @@ public class PhotoController {
                                                        @PathVariable("albumId") final Long albumId) {
         List<PhotoDto> photoDtos = photoService.getPhotoList(albumId, keyword, sort, orderBy);
         return new ResponseEntity<>(photoDtos, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/move", method = RequestMethod.PUT)
+    public ResponseEntity<String> movePhoto(@RequestBody final PhotoMoveDto photoMoveDto){
+        Long fromAlbumId = photoMoveDto.getFromAlbumId();
+        Long toAlbumId = photoMoveDto.getToAlbumId();
+        List<Long> photoIds = photoMoveDto.getPhotoIds();
+
+        photoService.movePhotos(fromAlbumId, toAlbumId, photoIds);
+
+
+        /*
+        변경 이후 남은 photo들을 반환
+         */
+
+        return new ResponseEntity<>("미완", HttpStatus.OK);
     }
 }
