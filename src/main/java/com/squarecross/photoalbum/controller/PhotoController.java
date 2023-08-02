@@ -1,5 +1,6 @@
 package com.squarecross.photoalbum.controller;
 
+import com.squarecross.photoalbum.domain.Photo;
 import com.squarecross.photoalbum.dto.AlbumDto;
 import com.squarecross.photoalbum.dto.PhotoDto;
 import com.squarecross.photoalbum.service.AlbumService;
@@ -8,6 +9,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/albums/{albumId}/photos")
@@ -56,6 +60,19 @@ public class PhotoController {
                 OutputStream outputStream = response.getOutputStream();
                 IOUtils.copy(new FileInputStream(file), outputStream);
                 outputStream.close();
+            }
+            else{
+                ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
+                FileInputStream fileInputStream;
+                for (long id : photoIds) {
+                    File file = photoService.getImageFile(id);
+                    zipOut.putNextEntry(new ZipEntry(file.getName()));
+                    fileInputStream = new FileInputStream(file);
+                    StreamUtils.copy(fileInputStream, zipOut);
+                    fileInputStream.close();
+                    zipOut.closeEntry();
+                }
+                zipOut.close();
             }
         } catch (FileNotFoundException e){
             throw new RuntimeException("Error");
