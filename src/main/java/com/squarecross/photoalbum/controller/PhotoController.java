@@ -80,4 +80,12 @@ public class PhotoController {
             throw new RuntimeException(e);
         }
     }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<PhotoDto>> getPhotoList(@RequestParam(value = "keyword", required = false, defaultValue = "") final String keyword,
+                                                       @RequestParam(value = "sort", required = false, defaultValue = "byDate") final String sort,
+                                                       @RequestParam(value = "orderBy", required = false, defaultValue = "desc") final String orderBy) {
+        List<PhotoDto> photoDtos = photoService.getPhotoList(keyword, sort, orderBy);
+        return new ResponseEntity<>(photoDtos, HttpStatus.OK);
+    }
 }

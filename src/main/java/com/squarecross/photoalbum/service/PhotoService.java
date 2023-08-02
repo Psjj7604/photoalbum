@@ -22,7 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PhotoService {
@@ -104,6 +107,37 @@ public class PhotoService {
         }
         return new File(Constants.PATH_PREFIX + res.get().getOriginalUrl());
     }
+
+    public List<PhotoDto> getPhotoList(String keyword, String sort, String orderBy){
+        List<Photo> photos;
+        if (!Objects.equals(orderBy, "asc") && !Objects.equals(orderBy, "desc")) {
+            throw new IllegalArgumentException("올바른 정렬 순서를 지정해주세요. (asc 또는 desc)");
+        }
+
+        if (Objects.equals(sort, "byName")) {
+            if(Objects.equals(orderBy, "asc")){
+                photos = photoRepository.findByFileNameContainingOrderByFileNameAsc(keyword);
+            }
+            else {
+                photos = photoRepository.findByFileNameContainingOrderByFileNameDesc(keyword);
+            }
+
+        } else if (Objects.equals(sort, "byDate")) {
+            if (Objects.equals(orderBy,"asc")){
+                photos = photoRepository.findByFileNameContainingOrderByUploadedAtAsc(keyword);
+            }
+            else {
+                photos = photoRepository.findByFileNameContainingOrderByUploadedAtDesc(keyword);
+            }
+        } else {
+            throw new IllegalStateException("알 수 없는 정렬 기준입니다.");
+        }
+        List<PhotoDto> photoDtos = PhotoMapper.converToDtoList(photos);
+
+        return photoDtos;
+    }
+
+
 
 
 
